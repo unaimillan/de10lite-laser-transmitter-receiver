@@ -1,0 +1,6 @@
+[submodule "include/fpga-uart"]
+	path = include/fpga-uart
+	url = https://github.com/WangXuan95/FPGA-UART/
+[submodule "include/basics-graphics-music"]
+	path = include/basics-graphics-music
+	url = https://github.com/chipdesignschool/basics-graphics-music
