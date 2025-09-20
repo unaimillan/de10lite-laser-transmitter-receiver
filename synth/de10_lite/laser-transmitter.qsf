@@ -1,4 +1,62 @@
+# -----------------------------
+# Project specific settings
+# -----------------------------
+
+set_global_assignment -name TOP_LEVEL_ENTITY board_specific_top
+set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files_transmitter
+
+set_global_assignment -name SEARCH_PATH  ../../rtl/transmitter
+
+set_global_assignment -name SYSTEMVERILOG_FILE lab_top.sv
+
+set_global_assignment -name SYSTEMVERILOG_FILE "../../include/fpga-uart/RTL/uart_tx.v"
+set_global_assignment -name SYSTEMVERILOG_FILE "../../include/fpga-uart/RTL/uart_rx.v"
+
+# -----------------------------
+# Common settings
+# -----------------------------
+
+set_global_assignment -name SEARCH_PATH .
+set_global_assignment -name SEARCH_PATH  ../..
+set_global_assignment -name SEARCH_PATH  ../../rtl/
+set_global_assignment -name SEARCH_PATH "../../include/basics-graphics-music/labs/common"
+
+set_global_assignment -name SYSTEMVERILOG_FILE ./board_specific_top.sv
+
+set_global_assignment -name SYSTEMVERILOG_FILE "../../include/basics-graphics-music/peripherals/hub75e_led_matrix.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../../include/basics-graphics-music/peripherals/tm1638_virtual_switches.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../../include/basics-graphics-music/peripherals/imitate_reset_on_power_up.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../../include/basics-graphics-music/peripherals/lcd_480_272.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../../include/basics-graphics-music/peripherals/tm1638_board.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../../include/basics-graphics-music/peripherals/inmp441_mic_i2s_receiver.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../../include/basics-graphics-music/peripherals/i2s_audio_out.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../../include/basics-graphics-music/peripherals/inmp441_mic_i2s_receiver_alt.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../../include/basics-graphics-music/peripherals/lcd_480_272_ml6485.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../../include/basics-graphics-music/peripherals/tm1638_registers.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../../include/basics-graphics-music/peripherals/lcd_800_480.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../../include/basics-graphics-music/peripherals/inmp441_mic_i2s_receiver_new.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../../include/basics-graphics-music/peripherals/tm1638_using_graphics.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../../include/basics-graphics-music/peripherals/vga.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../../include/basics-graphics-music/peripherals/slow_clk_gen.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../../include/basics-graphics-music/peripherals/digilent_pmod_mic3_spi_receiver.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../../include/basics-graphics-music/peripherals/audio_pwm.sv"
+
+set_global_assignment -name SYSTEMVERILOG_FILE "../../include/basics-graphics-music/labs/common/config.svh"
+set_global_assignment -name SYSTEMVERILOG_FILE "../../include/basics-graphics-music/labs/common/convert.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../../include/basics-graphics-music/labs/common/counter_with_enable.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../../include/basics-graphics-music/labs/common/seven_segment_display.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../../include/basics-graphics-music/labs/common/shift_reg.sv"
+set_global_assignment -name SYSTEMVERILOG_FILE "../../include/basics-graphics-music/labs/common/strobe_gen.sv"
+
+set_global_assignment -name SDC_FILE ./board_specific.sdc
+set_global_assignment -name NUM_PARALLEL_PROCESSORS 4
+
+# ------------------------------------------------------------------------------
+# Templated part from BGM below
+# ------------------------------------------------------------------------------
+
 set_global_assignment   -name DEVICE 10M50DAF484C7G
+set_global_assignment -name FAMILY "MAX 10"
 set_global_assignment   -name RESERVE_ALL_UNUSED_PINS_WEAK_PULLUP "AS INPUT TRI-STATED"
 
   set_instance_assignment -name IO_STANDARD "3.3-V LVTTL" -to *
@@ -206,3 +264,5 @@ set_location_assignment PIN_AB3  -to GPIO[32]
 set_location_assignment PIN_Y3   -to GPIO[33]
 set_location_assignment PIN_AB2  -to GPIO[34]
 set_location_assignment PIN_AA2  -to GPIO[35]
+
+set_global_assignment -name LAST_QUARTUS_VERSION "24.1std.0 Lite Edition"

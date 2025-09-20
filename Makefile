@@ -1,4 +1,4 @@
-.PHONY: clean simulate quartus synth upload gen_asm
+.PHONY: clean simulate quartus synth synth-trans synth-recv upload gen_asm
 
 help:
 	$(info make help    - show this message(default))
@@ -24,10 +24,11 @@ help:
 # Synthesis
 # ------------------------------------------------------------------------------
 
-CABLE_NAME   ?= "USB-Blaster"
+# CABLE_NAME   ?= "USB-Blaster"
 PROJECT_DIR  ?= ./synth/de10_lite
-PROJECT_TRANS_NAME ?= "laser-transmitter"
-PROJECT_RECV_NAME ?= "laser-receiver"
+PROJECT_NAME_TRANSMITTER ?= "laser-transmitter"
+PROJECT_NAME_RECEIVER    ?= "laser-receiver"
+# PROJECT_NAME ?= $(TRANS_NAME)
 
 QUARTUS     := cd $(PROJECT_DIR) && quartus
 QUARTUS_SH  := cd $(PROJECT_DIR) && quartus_sh
@@ -58,9 +59,15 @@ quartus:
 #     &&                                      - if previous command was successfull
 #     quartus_sh --flow compile <projectname> - run quartus shell & perform basic compilation 
 #                                               of <projectname> project
-synth:
-	$(QUARTUS_SH) --no_banner --flow compile $(PROJECT_NAME)
-	make upload
+synth-trans:
+	$(QUARTUS_SH) --no_banner --flow compile $(PROJECT_NAME_TRANSMITTER)
+	make upload-trans
+
+synth-recv:
+	$(QUARTUS_SH) --no_banner --flow compile $(PROJECT_NAME_RECEIVER)
+	make upload-recv
+
+# synth: synth-trans, synth-recv
 
 # make load
 #  cd project && quartus_pgm -c "USB-Blaster" -m JTAG -o "p;<projectname>.sof"
@@ -70,5 +77,13 @@ synth:
 #     -c "USB-Blaster"         - connect to "USB-Blaster" cable
 #     -m JTAG                  - in JTAG programming mode
 #     -o "p;<projectname>.sof" - program (configure) FPGA with <projectname>.sof file
-upload:
-	$(QUARTUS_PGM) --no_banner -c $(CABLE_NAME) -m JTAG -o "p;output_files/$(PROJECT_NAME).sof"
+# upload:
+# 	$(QUARTUS_PGM) --no_banner -c $(CABLE_NAME) -m JTAG -o "p;output_files_transmitter/$(PROJECT_NAME).sof"
+TRANSMITTER_CABLE_NAME ?= "USB-Blaster [1-2]"
+RECEIVER_CABLE_NAME ?= "USB-Blaster [1-3]"
+
+upload-trans:
+	$(QUARTUS_PGM) --no_banner -c $(TRANSMITTER_CABLE_NAME) -m JTAG -o "p;output_files_transmitter/$(PROJECT_NAME_TRANSMITTER).sof"
+
+upload-recv:
+	$(QUARTUS_PGM) --no_banner -c $(RECEIVER_CABLE_NAME) -m JTAG -o "p;output_files_receiver/$(PROJECT_NAME_RECEIVER).sof"

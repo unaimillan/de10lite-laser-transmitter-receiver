@@ -78,7 +78,8 @@ module lab_top
         else
             cnt <= cnt + 1'd1;
 
-    wire enable = (cnt [24:0] == '0);
+    // wire enable = (cnt [24:0] == '0);
+    wire enable;
 
     //------------------------------------------------------------------------
 
@@ -90,7 +91,7 @@ module lab_top
       else if (enable)
         shift_reg <= { shift_reg [0], shift_reg [w_digit - 1:1] };
 
-    assign led = w_led' (shift_reg);
+    assign led[8:0] = (w_led)' (shift_reg);
 
     //------------------------------------------------------------------------
 
@@ -114,48 +115,41 @@ module lab_top
     }
     seven_seg_encoding_e;
 
-    seven_seg_encoding_e letter;
+    // seven_seg_encoding_e letter;
+    wire [7:0] letter;
 
-    always_comb
-      case (4' (shift_reg))
-      4'b1000: letter = F;
-      4'b0100: letter = P;
-      4'b0010: letter = G;
-      4'b0001: letter = A;
-      default: letter = space;
-      endcase
+    // always_comb
+    //   case (4' (shift_reg))
+    //   4'b1000: letter = F;
+    //   4'b0100: letter = P;
+    //   4'b0010: letter = G;
+    //   4'b0001: letter = A;
+    //   default: letter = space;
+    //   endcase
 
     assign abcdefgh = letter;
     assign digit    = shift_reg;
 
-    // Transmit with laser
-    wire uart_out;
+    // Recieve with laser
+    wire uart_in = ~ gpio[30];
 
-    uart_tx #(
-      .CLK_FREQ                  ( 50000000 ), // clk frequency, Unit : Hz
-      .BAUD_RATE                 ( 1200     ), // Unit : Hz
-      .PARITY                    ( "NONE"   ), // "NONE", "ODD", or "EVEN"
-      .STOP_BITS                 ( 2        ), // can be 1, 2, 3, 4, ...
-      .BYTE_WIDTH                ( 1        ), // can be 1, 2, 3, 4, ...
-      .FIFO_EA                   ( 3        ), // 0:no fifo   1,2:depth=4   3:depth=8   4:depth=16  ...  10:depth=1024   11:depth=2048  ...
-      .EXTRA_BYTE_AFTER_TRANSFER ( ""       ), // specify a extra byte to send after each AXI-stream transfer. when ="", do not send this extra byte
-      .EXTRA_BYTE_AFTER_PACKET   ( ""       )  // specify a extra byte to send after each AXI-stream packet  . when ="", do not send this extra byte
+    uart_rx #(
+        .CLK_FREQ  (  50000000 ), // clk frequency, Unit : Hz
+        .BAUD_RATE (  1200     ), // Unit : Hz
+        .PARITY    (  "NONE"   ), // "NONE", "ODD", or "EVEN"
+        .FIFO_EA   (  3        ) // 0:no fifo   1,2:depth=4   3:depth=8   4:depth=16  ...  10:depth=1024   11:depth=2048  ...
     ) (
-      .rstn      ( ~rst ),
-      .clk       ( clk ),
+        .rstn       ( ~rst ),
+        .clk        ( clk  ),
 
-      .i_tready  (  ),
+        .i_uart_rx  ( uart_in ),
 
-      .i_tvalid  ( enable ),
-      .i_tdata   ( letter ),
-      .i_tkeep   ( '1 ),
-      .i_tlast   ( '1 ),
-
-      .o_uart_tx ( uart_out )
+        .o_tready   ( '1     ),
+        .o_tvalid   ( enable ),
+        .o_tdata    ( letter ),
+        .o_overflow (  )
     );
 
-    assign gpio[30] = sw[0] ? (sw[1] & ~uart_out) : key[0];
-    assign gpio[32] = '1;
-    assign gpio[34] = '0;
+    assign led[9] = uart_in;
 
 endmodule

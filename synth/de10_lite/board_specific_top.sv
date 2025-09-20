@@ -106,7 +106,7 @@ module board_specific_top
         .w_sw          (   w_lab_sw           ),
         .w_led         (   w_led              ),
         .w_digit       (   w_digit            ),
-        .w_gpio        (   w_arduino + w_gpio ),
+        .w_gpio        (   w_gpio             ),
 
         .screen_width  (   screen_width       ),
         .screen_height (   screen_height      ),
@@ -142,7 +142,7 @@ module board_specific_top
         .mic           (   mic                ),
         .sound         (   sound              ),
 
-        .gpio          ( { ARDUINO_IO, GPIO } )
+        .gpio          (   GPIO               )
     );
 
     //------------------------------------------------------------------------
